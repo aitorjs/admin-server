@@ -2,8 +2,11 @@
   "name": "admin-server",
   "version": "0.0.3",
   "main": "src/index.ts",
+  "engines": {
+    "node": "21.x"
+  },
   "scripts": {
-    "dev": "tsx watch src/index.mts",
+    "dev": "pnpx prisma generate && tsx watch src/index.mts",
     "points": "tsx watch src/points.mts",
     "export:data": "sudo docker exec postgres-postgis pg_dump -U postgres -F t mydb | gzip >./backups/mydb-$(date +%Y-%m-%d).tar.gz"
   },
