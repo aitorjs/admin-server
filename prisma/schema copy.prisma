@@ -1,0 +1,163 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// model User {
+//   id    Int @id @default (autoincrement())
+//   email String @unique
+//  
+//   posts Post[]
+// }
+
+// model Post {
+//   id     Int @id @default (autoincrement())
+//   title  String  
+//   userId Int  
+//  
+//   user   User @relation(fields: [userId], references: [id])
+// }
+
+// model Post {
+//  id Int @id @default(autoincrement())
+//
+//  body      String
+//  latitude  Float
+//  longitude Float
+//  location Json
+
+//  createdat DateTime @default(now())
+//  updatedat DateTime @default(now()) @updatedAt
+// }
+
+model User {
+  id            String @id @default (uuid())
+  username      String @unique
+  email String  @unique
+  emailVerified Boolean
+  active        Boolean
+  password      String
+  avatar        String ?
+  roles         String
+  contacts      Json
+  latitude      Float
+  longitude     Float
+  createdAt     DateTime @default (now())
+  updatedAt     DateTime @updatedAt
+
+  dons Donusers[]
+ }
+
+model Don {
+  id          String   @id @default (uuid())
+  title       String   @unique
+  categories  Int[] 
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  users Donusers[]
+}
+
+model Donusers {
+  id          String   @id @default (uuid())
+  userId      String
+  multimedia  String[] @db.VarChar(255)
+  description String  
+  latitude    Float
+  longitude   Float
+   
+  donId       String
+  don         Don    @relation(fields: [donId], references: [id])
+  user        User   @relation(fields: [userId], references: [id])
+}
+
+model Category {
+  id   Int @id @default (autoincrement())
+  title String
+  createdAt DateTime @default (now())
+  updatedAt DateTime @updatedAt
+}
+
+model Multimedia {
+  id        String @id @default (uuid())
+  name      String
+  createdAt DateTime @default (now())
+  updatedAt DateTime @updatedAt
+}
+
+model Role {
+  id   Int @id @default (autoincrement())
+  title String
+  createdAt DateTime @default (now())
+  updatedAt DateTime @updatedAt
+}
+
+// model Don {
+//   id          String @id @default (uuid())
+//   title       String @db.VarChar(255)
+//   categories  Int[]
+//   multimedia  String[]
+//   description String
+//   userDons    UserDon[]
+//   createdAt   DateTime @default (now())
+//   updatedAt   DateTime @updatedAt
+//   }
+
+
+// model User {
+//    id            String @id @default (uuid())
+//    username      String @unique
+//    email         String @unique
+//    emailVerified Boolean
+//    active        Boolean
+//    password      String
+//    avatar        String ?
+//       roles         String
+//    location      Json
+//    createdAt   DateTime @default (now())
+//    updatedAt   DateTime @updatedAt
+//   }
+
+
+// model Don {
+//   id          Int      @id @default(autoincrement())
+//   title       String   @db.VarChar(255)
+//   categories  String[] 
+//   multimedia  String?  @db.VarChar(255)
+//   description String   @db.VarChar(255)
+//   createdAt   DateTime @default(now())
+//   updatedAt   DateTime @updatedAt
+// }
+
+// model Post {
+//   id        String   @id @default(uuid())
+//   title     String   @db.VarChar(255)
+//   content   String?
+//   published Boolean  @default(false)
+//   author    User     @relation(fields: [authorId], references: [id])
+//   authorId  Int
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
+
+// model Profile {
+//   id     Int     @id @default(autoincrement())
+//   bio    String?
+//   user   User    @relation(fields: [userId], references: [id])
+//   userId Int     @unique
+// }
+
+// model User {
+//   id      Int      @id @default(autoincrement())
+//   email   String   @unique
+//   name    String?
+//   posts   Post[]
+//   profile Profile?
+// }

@@ -1,0 +1,5 @@
+# CHANGELOG
+
+- v0.0.1 (2024-02-04): Endpoints for user (with avatar) and don (with multimedias) manipulation.
+- v0.0.2 (2024-02-05): Files are stores here and prisma added.
+- v0.0.3 (2024-02-24): Endpoint for search on dons added.

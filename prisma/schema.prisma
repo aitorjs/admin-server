@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  username      String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+
+  active        Boolean ?
+  password      String ?
+  avatar        String ?
+  roles         Int 
+  contacts      Json ?
+  latitude      Float ?
+  longitude     Float ?
+  createdAt     DateTime @default (now())
+  updatedAt     DateTime @updatedAt
+
+  dons Donusers[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// model User {
+//   id            String @id @default (uuid())
+//   username      String @unique
+//   email String  @unique
+//   emailVerified Boolean
+//   active        Boolean
+//   password      String
+//   avatar        String ?
+//   roles         String
+//   contacts      Json
+//   latitude      Float
+//   longitude     Float
+//   createdAt     DateTime @default (now())
+//   updatedAt     DateTime @updatedAt
+
+//   dons Donusers[]
+//  }
+
+model Don {
+  id          String   @id @default (uuid())
+  title       String   @unique
+  categories  Int[] 
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  users Donusers[]
+}
+
+model Donusers {
+  id          String   @id @default (uuid())
+  userId      String
+  multimedia  String[] @db.VarChar(255)
+  description String  
+  latitude    Float
+  longitude   Float
+   
+  donId       String
+  don         Don    @relation(fields: [donId], references: [id])
+  user        User   @relation(fields: [userId], references: [id])
+}
+
+model Category {
+  id   Int @id @default (autoincrement())
+  title String
+  createdAt DateTime @default (now())
+  updatedAt DateTime @updatedAt
+}
+
+model Multimedia {
+  id        String @id @default (uuid())
+  name      String
+  createdAt DateTime @default (now())
+  updatedAt DateTime @updatedAt
+}
+
+model Role {
+  id   Int @id @default (autoincrement())
+  title String
+  createdAt DateTime @default (now())
+  updatedAt DateTime @updatedAt
+}
